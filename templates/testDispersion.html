@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <link href="/static/css/testDispersion.css" rel="stylesheet">
+    <script src="/static/plugins/jquery/jquery.min.js"></script>
+    <!--webgazer-->
+    <script src="/static/js/webgazer.js"></script>
+    <title>Test Dispersion</title>
+</head>
+<body onload="setCircle()">
+<div id="canvas">
+    <div class="circle" id="c1"></div>
+    <div class="circle" id="c2"></div>
+    <div class="circle" id="c3"></div>
+</div>
+</body>
+<script>
+
+    let gaze_data_x = [];
+    let gaze_data_y = [];
+    let gaze_data_t = [];
+
+    let gaze_1_x = [];
+    let gaze_1_y = [];
+    let gaze_1_t = [];
+
+    let gaze_2_x = [];
+    let gaze_2_y = [];
+    let gaze_2_t = [];
+
+    let gaze_3_x = [];
+    let gaze_3_y = [];
+    let gaze_3_t = [];
+
+
+    function setCircle() {
+        showCircle(1);
+        webgazer.setGazeListener(function (data, elapsedTime) {
+            if (data == null) {
+                return;
+            }
+            gaze_data_x.push(data.x);
+            gaze_data_y.push(data.y);
+            gaze_data_t.push(elapsedTime);
+        }).begin();
+        setTimeout("showCircle(2)", 20000);
+        setTimeout("showCircle(3)", 30000);
+        setTimeout("showCircle(4)", 40000);
+    }
+
+    function showCircle(num) {
+        $('#c1').css('display', 'none');
+        $('#c2').css('display', 'none');
+        $('#c3').css('display', 'none');
+        switch (num) {
+            case 1: {
+                $('#c1').css('display', 'block');
+                break;
+            }
+            case 2: {
+                $('#c2').css('display', 'block');
+                gaze_1_x = gaze_data_x;
+                gaze_1_y = gaze_data_y;
+                gaze_1_t = gaze_data_t;
+
+                gaze_data_x = [];
+                gaze_data_y = [];
+                gaze_data_t = [];
+                break;
+            }
+            case 3: {
+                $('#c3').css('display', 'block');
+                gaze_2_x = gaze_data_x;
+                gaze_2_y = gaze_data_y;
+                gaze_2_t = gaze_data_t;
+
+                gaze_data_x = [];
+                gaze_data_y = [];
+                gaze_data_t = [];
+                break;
+            }
+            default: {
+                $('#c1').css('display', 'block');
+                $('#c2').css('display', 'block');
+                $('#c3').css('display', 'block');
+                gaze_3_x = gaze_data_x;
+                gaze_3_y = gaze_data_y;
+                gaze_3_t = gaze_data_t;
+
+                gaze_data_x = [];
+                gaze_data_y = [];
+                gaze_data_t = [];
+
+                webgazer.pause();
+                testDispersion();
+                break;
+            }
+        }
+    }
+
+    //获得三个圆形中心的坐标-类名更改时函数需要更改
+    function get_location_of_targets() {
+        let coordinates = [];
+        coordinates.push([$('.circle:eq(0)').offset().left + $('.circle:eq(0)').width() / 2, $('.circle:eq(0)').offset().top + $('.circle:eq(0)').height() / 2]);
+        coordinates.push([$('.circle:eq(1)').offset().left + $('.circle:eq(1)').width() / 2, $('.circle:eq(1)').offset().top + $('.circle:eq(1)').height() / 2]);
+        coordinates.push([$('.circle:eq(2)').offset().left + $('.circle:eq(2)').width() / 2, $('.circle:eq(2)').offset().top + $('.circle:eq(2)').height() / 2]);
+        return coordinates;
+    }
+
+    //监听空格事件-发送数据
+    $(document).keyup(function (event) {
+
+        switch (event.keyCode) {
+            case 32: {
+                let formData = new FormData();
+                let targets = get_location_of_targets();
+                //添加三个圆的中心点
+                formData.append("target1", targets[0]);
+                formData.append("target2", targets[1]);
+                formData.append("target3", targets[2]);
+                //添加对应的gaze数据
+                formData.append("gaze_1_x", gaze_1_x);
+                formData.append("gaze_1_y", gaze_1_y);
+                formData.append("gaze_1_t", gaze_1_t);
+
+                formData.append("gaze_2_x", gaze_2_x);
+                formData.append("gaze_2_y", gaze_2_y);
+                formData.append("gaze_2_t", gaze_2_t);
+
+                formData.append("gaze_3_x", gaze_3_x);
+                formData.append("gaze_3_y", gaze_3_y);
+                formData.append("gaze_3_t", gaze_3_t);
+                $.ajax({
+                    type: 'POST',
+                    url: '/dispersion/',
+                    data: formData,
+                    success: function () {
+                        console.log("success");
+                    },
+                    error: function () {
+                        console.log("error");
+                    },
+                    contentType: false,
+                    processData: false,
+                })
+                break;
+            }
+
+        }
+    });
+</script>
+</html>

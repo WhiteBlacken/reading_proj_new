@@ -1,0 +1,75 @@
+<html lang="zh-CN">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <title>MemxEdu</title>
+
+    <link rel="canonical" href="https://v5.bootcss.com/docs/examples/sign-in/">
+
+
+    <!-- Bootstrap core CSS -->
+    <!--bp5 css文件-->
+    <link href="/static/plugins/bootstrap-5.1.3-dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="/static/css/signin.css" rel="stylesheet">
+    <!-- Favicons -->
+    <meta name="theme-color" content="#7952b3">
+
+
+    <!-- Custom styles for this template -->
+    <link href="signin.css" rel="stylesheet">
+    <script src="https://cdn.staticfile.org/jquery/1.10.2/jquery.min.js"></script>
+</head>
+<body class="text-center">
+
+<main class="form-signin">
+    <form method="post" action="{% url 'login' %}">
+        <h1 class="display-10 fw-bold">阅读眼动追踪实验管理平台</h1>
+
+        <div class="form-floating">
+            <input type="text" class="form-control" id="username" name="username" placeholder="qixiangyao">
+            <label for="floatingInput">用户名</label>
+        </div>
+
+        <div class="form-floating mt-2">
+            <input type="password" class="form-control" id="psw" name="psw" placeholder="qixiangyao">
+            <label for="floatingInput">密码</label>
+        </div>
+
+        <div class="form-check">
+            <input class="form-check-input" type="radio" name="needCorrection" id="flexRadioDefault1" value="true" checked>
+            <label class="form-check-label" for="flexRadioDefault1">
+                需要校准
+            </label>
+        </div>
+        <div class="form-check">
+            <input class="form-check-input" type="radio" name="needCorrection" id="flexRadioDefault2" value="false">
+            <label class="form-check-label" for="flexRadioDefault2">
+                无需校准
+            </label>
+        </div>
+
+        <input id="device" type="hidden" name="device"/>
+        <button class="w-100 btn btn-lg btn-primary mt-3" type="submit">登录</button>
+
+    </form>
+</main>
+
+
+</body>
+</html>
+<!--bp5 js集成文件-->
+<script src="/static/plugins/bootstrap-5.1.3-dist/js/bootstrap.bundle.min.js"></script>
+
+<script>
+    window.onload = function () {
+        let isMac = /macintosh|mac os x/i.test(navigator.userAgent); //苹果
+
+        if (isMac) {
+            $("#device").val("mac");
+        } else {
+            $("#device").val("window");
+        }
+
+    }
+</script>
