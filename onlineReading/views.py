@@ -259,9 +259,10 @@ def get_para(request):
             logger.warning("百度翻译接口访问失败")
 
     # 创建一次实验
-    # requesert
     experiment = Experiment.objects.create(article_id=article_id, user=1,
-                                           device=request.session.get("device"), is_finish=0)
+                                           device=request.session.get("device"), 
+                                           is_finish=0, 
+                                           is_new_exp=True)
     request.session["experiment_id"] = experiment.id
     logger.info("--本次实验开始,实验者：%s，实验id：%d--" % (request.user.username, experiment.id))
     return JsonResponse(para_dict, json_dumps_params={"ensure_ascii": False})
