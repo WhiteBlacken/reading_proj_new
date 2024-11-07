@@ -14,16 +14,13 @@ from analysis.models import Text, Paragraph, Translation, Dictionary, Experiment
 from tools import login_required, translate, Timer, simplify_word, simplify_sentence, get_word_and_sentence_from_text, \
     format_gaze, detect_fixations, get_item_index_x_y, get_sentence_by_word, get_euclid_distance, textarea, \
     get_row
+from pupil_capture import views as capture
+import threading
 
-# from tools import freq_dist
-
-
-# from autogluon.multimodal import MultiModalPredictor
-
-# wordPredictor = MultiModalPredictor.load('model/word')
-# sentPredictor = MultiModalPredictor.load('model/sent')
-# wanderPredictor = MultiModalPredictor.load('model/wander')
-
+global_x = []
+global_y = []
+global_t = []
+stop_thread = False
 
 def go_login(request):
     """
@@ -265,15 +262,34 @@ def get_para(request):
                                            is_new_exp=True)
     request.session["experiment_id"] = experiment.id
     logger.info("--本次实验开始,实验者：%s，实验id：%d--" % (request.user.username, experiment.id))
+    
+    # 开启一个后台线程执行 gaze_sequence 的任务
+    thread = threading.Thread(target=gaze_sequence_thread)
+    thread.start()
     return JsonResponse(para_dict, json_dumps_params={"ensure_ascii": False})
 
+def gaze_sequence_thread():
+    pupil_remote = capture.PupilRemoteManager("127.0.0.1", 50020)
+    for msg in pupil_remote.track_gaze_sequence():
+        if stop_thread:
+            break
+        global_x.append(msg[0])
+        global_y.append(msg[1])
+        global_t.append(msg[2])
 
 def collect_page_data(request):
     """存储每页的数据"""
     image_base64 = request.POST.get("image")  # base64类型
-    x = request.POST.get("x")  # str类型
-    y = request.POST.get("y")  # str类型
-    t = request.POST.get("t")  # str类型
+    # x = request.POST.get("x")  # str类型
+    # y = request.POST.get("y")  # str类型
+    # t = request.POST.get("t")  # str类型
+
+    x = global_x
+    y = global_y
+    t = global_t
+
+    logger.info(f"gaze_data:x={str(x)},y={str(y)},t={str(t)}")
+
     texts = request.POST.get("text")
     page = request.POST.get("page")
 
@@ -292,10 +308,15 @@ def collect_page_data(request):
             is_test=0,
         )
         logger.info(f"第{page}页数据已存储,id为{str(pagedata.id)}")
+    global_x.clear()
+    global_y.clear()
+    global_t.clear()
+    logger.info(f"gaze_data after clear:x={str(x)},y={str(y)},t={str(t)}")
     return HttpResponse(1)
 
 
 def go_label_page(request):
+    stop_thread = True
     return render(request, "label_1.html")
 
 

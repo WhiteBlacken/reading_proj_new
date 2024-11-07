@@ -18,7 +18,7 @@ from tools import format_gaze, generate_fixations, generate_pic_by_base64, show_
     get_item_index_x_y, get_item_index_x_y_new, is_watching, get_sentence_by_word, compute_sentence_label,\
     get_cnn_feature, get_row, get_euclid_distance, generate_fixations_in_skip_data, show_fixations_by_line, keep_row,  split_fixations
 import cv2
-from semantic_attention import get_word_familiar_rate, calculate_topic_related_score, calculate_keywords_score
+# from semantic_attention import get_word_familiar_rate, calculate_topic_related_score, calculate_keywords_score
 import numpy as np
 
 # Create your views here.
