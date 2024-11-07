@@ -64,6 +64,7 @@ class Experiment(models.Model):
     is_finish = models.BooleanField()
     device = models.CharField(max_length=96, default="not detect")
     create_time = models.DateTimeField(default=timezone.now)  # 创建的时间
+    is_new_exp = models.BooleanField()
 
     class Meta:
         db_table = "data_experiment"
