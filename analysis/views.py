@@ -143,7 +143,7 @@ def get_all_time_pic(request):
             gaze_points, page_data.texts, page_data.location, page_id=page_data.id
         )
         # 不使用空行假设
-        _, row_level_fix_without_row_assumption, hit_rows = generate_fixations_in_skip_data(
+        adjust_fixations_without_row_assumption, row_level_fix_without_row_assumption, hit_rows = generate_fixations_in_skip_data(
             gaze_points, page_data.texts, page_data.location, page_id=page_data.id
         )
         
@@ -176,8 +176,8 @@ def get_all_time_pic(request):
         fix_img = show_fixations(result_fixations, background)
         cv2.imwrite(f"{path}fix-adjust.png", fix_img)
         # 不使用空行假设的fixation图
-        # fix_img = show_fixations(adjust_fixations_without_row_assumption, background)
-        # cv2.imwrite(f"{path}fix-adjust-without-row-assumption.png", fix_img)
+        fix_img = show_fixations(adjust_fixations_without_row_assumption, background)
+        cv2.imwrite(f"{path}fix-adjust-without-row-assumption.png", fix_img)
         fix_img = show_fixations_by_line(row_level_fix_without_row_assumption, background)
         cv2.imwrite(f"{path}fix-split.png", fix_img)
 

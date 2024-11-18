@@ -18,7 +18,7 @@ from django.urls import path
 from . import views
 
 urlpatterns = [
-    path("all_time_pic/",views.get_all_time_pic),
+    path("all_time_pic/",views.get_all_time_pic),  # this
     path("part_time_pic/",views.get_part_time_pic),
     path("dataset/",views.dataset_of_timestamp),
     path("dataset_all_time/",views.dataset_of_all_time),
@@ -27,5 +27,5 @@ urlpatterns = [
     path("sent_domain/",views.sent_domain),
     path("dataset_new/", views.dataset_new),
     path("dataset_skip/", views.dataset_of_all_time_for_skip),
-    path("get_pic_by_fix/", views.get_pic_by_fix)
+    path("get_pic_by_fix/", views.get_pic_by_fix) # this
 ]
