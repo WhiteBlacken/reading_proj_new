@@ -167,7 +167,8 @@ def get_all_time_pic(request):
             page_data.image, f"{path}background.png"
         )
         words_not_understand = json.loads(page_data.wordLabels) if page_data.wordLabels else []
-        title = f"{str(page_data.id)}-{exp.user}-words_not_understand"
+        # title = f"{str(page_data.id)}-{exp.user}-words_not_understand"
+        tiltle = ""
         word_pic_path = f"{path}background.png"
         paint_on_word(image, words_not_understand, word_locations, title, word_pic_path)
 
@@ -1107,7 +1108,7 @@ def get_pic_by_fix(request):
             )
             #
             words_not_understand = json.loads(page_data.wordLabels) if page_data.wordLabels else []
-            title = f"words_not_understand"
+            title = ""
             word_pic_path = f"{path}background.png"
             paint_on_word(image, words_not_understand, word_locations, title, word_pic_path)
             #
