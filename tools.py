@@ -412,7 +412,7 @@ def generate_fixations_in_skip_data(gaze_points, texts, location, page_id=0):
     print(f"[generate_fixations_in_skip_data] size of sequence_fixations={len(sequence_fixations)}")
     print(f"sequence_fixations:{sequence_fixations[:5]}")
     # 根据行先验调整fixations
-    result_fixations, result_rows, row_level_fix, hit_rows = move_fixation_by_no_blank_row_assumption(sequence_fixations, rows, len_per_word,page_id=page_id, use_assumption=False)
+    result_fixations, result_rows, row_level_fix, hit_rows = move_fixation_by_no_blank_row_assumption(sequence_fixations, rows, len_per_word,page_id=page_id, use_assumption=True)
     print(f"row_level_fix:{row_level_fix[:5]}")
     return result_fixations, row_level_fix, hit_rows
 
