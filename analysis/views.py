@@ -166,6 +166,11 @@ def get_all_time_pic(request):
         background = generate_pic_by_base64(
             page_data.image, f"{path}background.png"
         )
+        words_not_understand = json.loads(page_data.wordLabels) if page_data.wordLabels else []
+        title = f"{str(page_data.id)}-{exp.user}-words_not_understand"
+        word_pic_path = f"{path}background.png"
+        paint_on_word(image, words_not_understand, word_locations, title, word_pic_path)
+
         # 原始的fixation图
         fix_img = show_fixations(origin_fixations, background)
         cv2.imwrite(f"{path}fix-origin.png", fix_img)
@@ -1100,6 +1105,12 @@ def get_pic_by_fix(request):
             background = generate_pic_by_base64(
                 page_data.image, f"{path}background.png"
             )
+            #
+            words_not_understand = json.loads(page_data.wordLabels) if page_data.wordLabels else []
+            title = f"words_not_understand"
+            word_pic_path = f"{path}background.png"
+            paint_on_word(image, words_not_understand, word_locations, title, word_pic_path)
+            #
             image = cv2.imread(background)
             word_locations = get_word_location(page_data.location)
             words_not_understand = json.loads(page_data.wordLabels) if page_data.wordLabels else []
