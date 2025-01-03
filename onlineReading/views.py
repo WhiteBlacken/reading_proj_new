@@ -266,7 +266,8 @@ def get_para(request):
     # 开启一个后台线程执行 gaze_sequence 的任务
     thread = threading.Thread(target=gaze_sequence_thread)
     thread.start()
-    return JsonResponse(para_dict, json_dumps_params={"ensure_ascii": False})
+    return JsonResponse(para_dict, json_dumps_params={"ensure_ascii": False}) 
+
 
 def gaze_sequence_thread():
     pupil_remote = capture.PupilRemoteManager("127.0.0.1", 50020)
