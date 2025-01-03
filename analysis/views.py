@@ -168,7 +168,8 @@ def get_all_time_pic(request):
         )
         words_not_understand = json.loads(page_data.wordLabels) if page_data.wordLabels else []
         # title = f"{str(page_data.id)}-{exp.user}-words_not_understand"
-        tiltle = ""
+        image = cv2.imread(background)
+        title = ""
         word_pic_path = f"{path}background.png"
         paint_on_word(image, words_not_understand, word_locations, title, word_pic_path)
 
@@ -277,47 +278,47 @@ def get_all_time_pic(request):
         print(f"word_list:{word_list}")
         print(f"word_location:{word_locations}")
         assert len(word_list) == len(word_locations)
-        topic_score_dict = calculate_topic_related_score(page_data.texts)
-        keywords_dict = calculate_keywords_score(page_data.texts)
-        print(f"topic_score_dict:{topic_score_dict}")
-        semantic_path = f"{path}semantic_path/"
-        if not os.path.exists(semantic_path):
-            os.mkdir(semantic_path)
-        familiar_rate_seq = []
-        topic_score_seq = []
-        keyword_score_seq = []
-        if len(word_locations) > 0:
-            y_loc = word_locations[0][1]
+        # topic_score_dict = calculate_topic_related_score(page_data.texts)
+        # keywords_dict = calculate_keywords_score(page_data.texts)
+        # print(f"topic_score_dict:{topic_score_dict}")
+        # semantic_path = f"{path}semantic_path/"
+        # if not os.path.exists(semantic_path):
+        #     os.mkdir(semantic_path)
+        # familiar_rate_seq = []
+        # topic_score_seq = []
+        # keyword_score_seq = []
+        # if len(word_locations) > 0:
+        #     y_loc = word_locations[0][1]
 
-        row_idx = 0
-        for i, location in enumerate(word_locations):
-            if location[1] != y_loc:
-                semantic_familiar_pic_save_path = f"{semantic_path}semantic_familiar_rate_row_{row_idx}.png"
-                semantic_topic_pic_save_path = f"{semantic_path}semantic_topic_rate_row_{row_idx}.png"
-                semantic_keyword_pic_save_path = f"{semantic_path}semantic_keyword_row_{row_idx}.png"
-                myHeatmap.draw_heat_map(familiar_rate_seq, semantic_familiar_pic_save_path, word_pic_path)
-                myHeatmap.draw_heat_map(topic_score_seq, semantic_topic_pic_save_path, word_pic_path)
-                myHeatmap.draw_heat_map(keyword_score_seq, semantic_keyword_pic_save_path, word_pic_path)
-                familiar_rate_seq = []
-                topic_score_seq = []
-                keyword_score_seq = []
-                row_idx += 1
-            x, y = (word_locations[i][0] + word_locations[i][2]) // 2, (word_locations[i][1] + word_locations[i][3]) // 2
-            familiar_rate_seq.extend([x,y] for _ in range(get_word_familiar_rate(word_list[i])//10))
-            if word_list[i] in topic_score_dict:
-                topic_score_seq.extend([x, y] for _ in range(int(topic_score_dict[word_list[i]]*20)))
-            if word_list[i] in keywords_dict:
-                keyword_score_seq.extend([x, y] for _ in range(int(keywords_dict[word_list[i]] * 20)))
+        # row_idx = 0
+        # for i, location in enumerate(word_locations):
+        #     if location[1] != y_loc:
+        #         semantic_familiar_pic_save_path = f"{semantic_path}semantic_familiar_rate_row_{row_idx}.png"
+        #         semantic_topic_pic_save_path = f"{semantic_path}semantic_topic_rate_row_{row_idx}.png"
+        #         semantic_keyword_pic_save_path = f"{semantic_path}semantic_keyword_row_{row_idx}.png"
+        #         myHeatmap.draw_heat_map(familiar_rate_seq, semantic_familiar_pic_save_path, word_pic_path)
+        #         myHeatmap.draw_heat_map(topic_score_seq, semantic_topic_pic_save_path, word_pic_path)
+        #         myHeatmap.draw_heat_map(keyword_score_seq, semantic_keyword_pic_save_path, word_pic_path)
+        #         familiar_rate_seq = []
+        #         topic_score_seq = []
+        #         keyword_score_seq = []
+        #         row_idx += 1
+        #     x, y = (word_locations[i][0] + word_locations[i][2]) // 2, (word_locations[i][1] + word_locations[i][3]) // 2
+        #     familiar_rate_seq.extend([x,y] for _ in range(get_word_familiar_rate(word_list[i])//10))
+        #     if word_list[i] in topic_score_dict:
+        #         topic_score_seq.extend([x, y] for _ in range(int(topic_score_dict[word_list[i]]*20)))
+        #     if word_list[i] in keywords_dict:
+        #         keyword_score_seq.extend([x, y] for _ in range(int(keywords_dict[word_list[i]] * 20)))
 
-            y_loc = location[1]
+        #     y_loc = location[1]
 
-        if len(familiar_rate_seq) > 0:
-            semantic_familiar_pic_save_path = f"{semantic_path}semantic_familiar_rate_row_{row_idx}.png"
-            semantic_topic_pic_save_path = f"{semantic_path}semantic_topic_rate_row_{row_idx}.png"
-            semantic_keyword_pic_save_path = f"{semantic_path}semantic_keyword_row_{row_idx}.png"
-            myHeatmap.draw_heat_map(familiar_rate_seq, semantic_familiar_pic_save_path, word_pic_path)
-            myHeatmap.draw_heat_map(topic_score_seq, semantic_topic_pic_save_path, word_pic_path)
-            myHeatmap.draw_heat_map(keyword_score_seq, semantic_keyword_pic_save_path, word_pic_path)
+        # if len(familiar_rate_seq) > 0:
+            # semantic_familiar_pic_save_path = f"{semantic_path}semantic_familiar_rate_row_{row_idx}.png"
+            # semantic_topic_pic_save_path = f"{semantic_path}semantic_topic_rate_row_{row_idx}.png"
+            # semantic_keyword_pic_save_path = f"{semantic_path}semantic_keyword_row_{row_idx}.png"
+            # myHeatmap.draw_heat_map(familiar_rate_seq, semantic_familiar_pic_save_path, word_pic_path)
+            # myHeatmap.draw_heat_map(topic_score_seq, semantic_topic_pic_save_path, word_pic_path)
+            # myHeatmap.draw_heat_map(keyword_score_seq, semantic_keyword_pic_save_path, word_pic_path)
     return HttpResponse(1)
 
 
@@ -1029,13 +1030,13 @@ def get_fix_distance(pre_fix, fix):
 
 def get_pic_by_fix(request):
     """按照时间切割数据集"""
-    experiment_list_select = [1924]
+    experiment_list_select = [1819]
     from datetime import datetime
     request_exp_id = request.GET.get('exp_id')
     print(f"request_exp_id:{request_exp_id}, type(request):{type(request_exp_id)}")
     logger.info(f"本次生成{len(experiment_list_select)}条")
 
-    file_path = f"data/reader/20240908-exp_fix_match_row.csv"
+    file_path = f"data/reader/20241126_line_match_result.csv"
     
     data = pd.read_csv(file_path)
 
@@ -1106,13 +1107,13 @@ def get_pic_by_fix(request):
             background = generate_pic_by_base64(
                 page_data.image, f"{path}background.png"
             )
+            image = cv2.imread(background)
             #
             words_not_understand = json.loads(page_data.wordLabels) if page_data.wordLabels else []
             title = ""
             word_pic_path = f"{path}background.png"
             paint_on_word(image, words_not_understand, word_locations, title, word_pic_path)
             #
-            image = cv2.imread(background)
             word_locations = get_word_location(page_data.location)
             words_not_understand = json.loads(page_data.wordLabels) if page_data.wordLabels else []
             title = ""
